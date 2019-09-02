@@ -35,6 +35,9 @@ typedef struct {
     int err;
 } lval;
 
+/* Create Enumeration of Possible lval Types */
+enum { LVAL_NUM, LVAL_ERR };
+
 /* Use operator string to see which operation to perform */
 long eval_op(long x, char* op, long y) {
     if (strcmp(op, "+") == 0) { return x + y; }
