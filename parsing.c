@@ -41,6 +41,22 @@ enum { LVAL_NUM, LVAL_ERR };
 /* Create Enumeration of Possible Error Types */
 enum { LERR_DIV_ZERO, LERR_BAD_OP, LERR_BAD_NUM };
 
+/* Create a new number type lval */
+lval lval_num(long x) {
+    lval v;
+    v.type = LVAL_NUM;
+    v.num = x;
+    return v;
+}
+
+/* Create a new error type lval */
+lval lval_err(int x) {
+    lval v;
+    v.type = LVAL_ERR;
+    v.err = x;
+    return v;
+}
+
 /* Use operator string to see which operation to perform */
 long eval_op(long x, char* op, long y) {
     if (strcmp(op, "+") == 0) { return x + y; }
