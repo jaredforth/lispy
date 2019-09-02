@@ -90,11 +90,11 @@ int main(int argc, char** argv) {
         /* Attempt to Parse the user Input */
         mpc_result_t r;
         if (mpc_parse("<stdin>", input, Lispy, &r)) {
-            /* On Success Print the AST */
-            mpc_ast_print(r.output);
+            long result = eval(r.output);
+            printf("%li\n", result);
             mpc_ast_delete(r.output);
+
         } else {
-            /* Otherwise Print the Error */
             mpc_err_print(r.error);
             mpc_err_delete(r.error);
         }
