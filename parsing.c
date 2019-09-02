@@ -29,10 +29,15 @@ void add_history(char* unused) {}
 #endif
 
 /* Declare New lval Struct */
-typedef struct {
+typedef struct lval {
     int type;
     long num;
-    int err;
+    /* Error and Symbol types have some string data */
+    char* err;
+    char* sym;
+    /* Count and Pointer to a list of "lval*" */
+    int count;
+    struct lval** cell;
 } lval;
 
 /* Create Enumeration of Possible lval Types */
