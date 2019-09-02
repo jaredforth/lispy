@@ -36,7 +36,7 @@ typedef struct {
 } lval;
 
 /* Create Enumeration of Possible lval Types */
-enum { LVAL_NUM, LVAL_ERR };
+enum { LVAL_ERR, LVAL_NUM, LVAL_SYM, LVAL_SEXPR };
 
 /* Create Enumeration of Possible Error Types */
 enum { LERR_DIV_ZERO, LERR_BAD_OP, LERR_BAD_NUM };
