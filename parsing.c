@@ -38,6 +38,9 @@ typedef struct {
 /* Create Enumeration of Possible lval Types */
 enum { LVAL_NUM, LVAL_ERR };
 
+/* Create Enumeration of Possible Error Types */
+enum { LERR_DIV_ZERO, LERR_BAD_OP, LERR_BAD_NUM };
+
 /* Use operator string to see which operation to perform */
 long eval_op(long x, char* op, long y) {
     if (strcmp(op, "+") == 0) { return x + y; }
