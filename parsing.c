@@ -127,6 +127,24 @@ void lval_del(lval* v) {
     free(v);
 }
 
+lenv* lenv_new(void) {
+    lenv* e = malloc(sizeof(lenv));
+    e->count = 0;
+    e->syms = NULL;
+    e->vals = NULL;
+    return e;
+}
+
+void lenv_del(lenv* e) {
+    for (int i = 0; i < e->count; i++) {
+        free(e->syms[i]);
+        lval_del(e->vals[i]);
+    }
+    free(e->syms);
+    free(e->vals);
+    free(e);
+}
+
 lval* lval_add(lval* v, lval* x) {
     v->count++;
     v->cell = realloc(v->cell, sizeof(lval*) * v->count);
