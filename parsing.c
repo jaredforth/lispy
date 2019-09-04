@@ -208,6 +208,20 @@ lval* lval_copy(lval* v) {
     return x;
 }
 
+lval* lenv_get(lenv* e, lval* k) {
+
+    /* Iterate over all items in environment */
+    for (int i = 0; i < e->count; i++) {
+        /* Check if the stored string matches the symbol string */
+        /* If it does, return a copy of the value */
+        if (strcmp(e->syms[i], k->sym) == 0) {
+            return lval_copy(e->vals[i]);
+        }
+    }
+    /* If no symbol found return error */
+    return lval_err("unbound symbol!");
+}
+
 void lval_print(lval* v);
 
 void lval_expr_print(lval* v, char open, char close) {
