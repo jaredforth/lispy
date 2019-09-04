@@ -371,6 +371,33 @@ lval* builtin_list(lval* a) {
     return a;
 }
 
+lval* builtin_def(lenv* e, lval* a) {
+    LASSERT(a, a->cell[0]->type == LVAL_QEXPR,
+            "Function 'def' passed incorrect type!");
+
+    /* First argument is symbol list */
+    lval* syms = a->cell[0];
+
+    /* Ensure all elements of first list are symbols */
+    for (int i = 0; i < syms->count; i++) {
+        LASSERT(a, syms->cell[i]->type == LVAL_SYM,
+                "Function 'def' cannot define non-symbol");
+    }
+
+    /* Check correct number of symbols and values */
+    LASSERT(a, syms->count == a->count-1,
+            "Function 'def' cannot define incorrect "
+            "number of values to symbols");
+
+    /* Assign copies of values to symbols */
+    for (int i = 0; i < syms->count; i++) {
+        lenv_put(e, syms->cell[i], a->cell[i+1]);
+    }
+
+    lval_del(a);
+    return lval_sexpr();
+}
+
 lval* lval_eval(lval* v);
 lval* builtin(lval* a, char* func);
 
@@ -486,16 +513,16 @@ lval* lval_read(mpc_ast_t* t) {
     return x;
 }
 
-lval* builtin(lval* a, char* func) {
-    if (strcmp("list", func) == 0) { return builtin_list(a); }
-    if (strcmp("head", func) == 0) { return builtin_head(a); }
-    if (strcmp("tail", func) == 0) { return builtin_tail(a); }
-    if (strcmp("join", func) == 0) { return builtin_join(a); }
-    if (strcmp("eval", func) == 0) { return builtin_eval(a); }
-    if (strstr("+-/*", func)) { return builtin_op(a, func); }
-    lval_del(a);
-    return lval_err("Unknown Function!");
-}
+//lval* builtin(lval* a, char* func) {
+//    if (strcmp("list", func) == 0) { return builtin_list(a); }
+//    if (strcmp("head", func) == 0) { return builtin_head(a); }
+//    if (strcmp("tail", func) == 0) { return builtin_tail(a); }
+//    if (strcmp("join", func) == 0) { return builtin_join(a); }
+//    if (strcmp("eval", func) == 0) { return builtin_eval(a); }
+//    if (strstr("+-/*", func)) { return builtin_op(a, func); }
+//    lval_del(a);
+//    return lval_err("Unknown Function!");
+//}
 
 void lenv_add_builtin(lenv* e, char* name, lbuiltin func) {
     lval* k = lval_sym(name);
@@ -542,6 +569,9 @@ int main(int argc, char** argv) {
     puts("Lispy Version 0.0.0.0.5");
     puts("Press Ctrl+c to Exit\n");
 
+    lenv* e = lenv_new();
+    lenv_add_builtins(e);
+
     while (1) {
 
         char* input = readline("lispy> ");
@@ -562,6 +592,7 @@ int main(int argc, char** argv) {
 
     }
 
+    lenv_del(e);
     mpc_cleanup(6, Number, Symbol, Sexpr, Qexpr, Expr, Lispy);
 
     return 0;
