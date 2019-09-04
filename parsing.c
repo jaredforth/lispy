@@ -115,6 +115,7 @@ void lval_del(lval* v) {
             /* Also free the memory allocated to contain the pointers */
             free(v->cell);
             break;
+        case LVAL_FUN: break;
     }
 
     free(v);
@@ -173,6 +174,7 @@ void lval_print(lval* v) {
         case LVAL_SYM:   printf("%s", v->sym); break;
         case LVAL_SEXPR: lval_expr_print(v, '(', ')'); break;
         case LVAL_QEXPR: lval_expr_print(v, '{', '}'); break;
+        case LVAL_FUN:   printf("<function>"); break;
     }
 }
 
