@@ -201,6 +201,13 @@ lval* lval_read(mpc_ast_t* t) {
     return x;
 }
 
+lval* lval_add(lval* v, lval* x) {
+    v->count++;
+    v->cell = realloc(v->cell, sizeof(lval*) * v->count);
+    v->cell[v->count-1] = x;
+    return v;
+}
+
 int main(int argc, char** argv) {
 
     mpc_parser_t* Number = mpc_new("number");
