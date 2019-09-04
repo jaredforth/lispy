@@ -287,6 +287,8 @@ lval* builtin_eval(lval* a) {
     return lval_eval(x);
 }
 
+lval* lval_join(lval* x, lval* y);
+
 lval* builtin_join(lval* a) {
 
     for (int i = 0; i < a->count; i++) {
@@ -301,6 +303,18 @@ lval* builtin_join(lval* a) {
     }
 
     lval_del(a);
+    return x;
+}
+
+lval* lval_join(lval* x, lval* y) {
+
+    /* For each cell in 'y' add it to 'x' */
+    while (y->count) {
+        x = lval_add(x, lval_pop(y, 0));
+    }
+
+    /* Delete the empty 'y' and return 'x' */
+    lval_del(y);
     return x;
 }
 
