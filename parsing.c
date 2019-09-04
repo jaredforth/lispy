@@ -80,31 +80,16 @@ lval* lval_sexpr(void) {
     return v;
 }
 
-/* Print an "lval" */
-void lval_print(lval v) {
-    switch (v.type) {
-        /* In the case the type is a number print it */
-        /* Then 'break' out of the switch. */
-        case LVAL_NUM: printf("%li", v.num); break;
-
-            /* In the case the type is an error */
-        case LVAL_ERR:
-            /* Check what type of error it is and print it */
-            if (v.err == LERR_DIV_ZERO) {
-                printf("Error: Division By Zero!");
-            }
-            if (v.err == LERR_BAD_OP)   {
-                printf("Error: Invalid Operator!");
-            }
-            if (v.err == LERR_BAD_NUM)  {
-                printf("Error: Invalid Number!");
-            }
-            break;
+void lval_print(lval* v) {
+    switch (v->type) {
+        case LVAL_NUM:   printf("%li", v->num); break;
+        case LVAL_ERR:   printf("Error: %s", v->err); break;
+        case LVAL_SYM:   printf("%s", v->sym); break;
+        case LVAL_SEXPR: lval_expr_print(v, '(', ')'); break;
     }
 }
 
-/* Print an "lval" followed by a newline */
-void lval_println(lval v) { lval_print(v); putchar('\n'); }
+void lval_println(lval* v) { lval_print(v); putchar('\n'); }
 
 /* Use operator string to see which operation to perform */
 lval eval_op(lval x, char* op, lval y) {
