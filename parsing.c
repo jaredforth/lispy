@@ -92,6 +92,13 @@ lval* lval_qexpr(void) {
     return v;
 }
 
+lval* lval_fun(lbuiltin func) {
+    lval* v = malloc(sizeof(lval));
+    v->type = LVAL_FUN;
+    v->fun = func;
+    return v;
+}
+
 void lval_del(lval* v) {
 
     switch (v->type) {
