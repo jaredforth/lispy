@@ -237,6 +237,7 @@ lval* builtin_list(lval* a) {
 }
 
 lval* lval_eval(lval* v);
+lval* builtin(lval* a, char* func);
 
 lval* lval_eval_sexpr(lval* v) {
 
@@ -264,7 +265,7 @@ lval* lval_eval_sexpr(lval* v) {
     }
 
     /* Call builtin with operator */
-    lval* result = builtin_op(v, f->sym);
+    lval* result = builtin(v, f->sym);
     lval_del(f);
     return result;
 }
