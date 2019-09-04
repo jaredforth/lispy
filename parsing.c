@@ -263,11 +263,14 @@ lval* lval_read(mpc_ast_t* t) {
     lval* x = NULL;
     if (strcmp(t->tag, ">") == 0) { x = lval_sexpr(); }
     if (strstr(t->tag, "sexpr"))  { x = lval_sexpr(); }
+    if (strstr(t->tag, "qexpr"))  { x = lval_qexpr(); }
 
     /* Fill this list with any valid expression contained within */
     for (int i = 0; i < t->children_num; i++) {
         if (strcmp(t->children[i]->contents, "(") == 0) { continue; }
         if (strcmp(t->children[i]->contents, ")") == 0) { continue; }
+        if (strcmp(t->children[i]->contents, "}") == 0) { continue; }
+        if (strcmp(t->children[i]->contents, "{") == 0) { continue; }
         if (strcmp(t->children[i]->tag,  "regex") == 0) { continue; }
         x = lval_add(x, lval_read(t->children[i]));
     }
@@ -285,10 +288,11 @@ int main(int argc, char** argv) {
     mpc_parser_t* Lispy  = mpc_new("lispy");
 
     mpca_lang(MPCA_LANG_DEFAULT,
-              "                                          \
+              "                                \
       number : /-?[0-9]+/ ;                    \
       symbol : '+' | '-' | '*' | '/' ;         \
       sexpr  : '(' <expr>* ')' ;               \
+      qexpr  : '{' <expr>* '}' ;               \
       expr   : <number> | <symbol> | <sexpr> ; \
       lispy  : /^/ <expr>* /$/ ;               \
     ",
