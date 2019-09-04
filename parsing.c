@@ -48,6 +48,12 @@ struct lval {
     lval** cell;
 };
 
+struct lenv {
+    int count;
+    char** syms;
+    lval** vals;
+};
+
 /* Construct a pointer to a new Number lval */
 lval* lval_num(long x) {
     lval* v = malloc(sizeof(lval));
