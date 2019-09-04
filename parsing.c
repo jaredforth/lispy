@@ -22,21 +22,31 @@ void add_history(char* unused) {}
 #define LASSERT(args, cond, err) \
   if (!(cond)) { lval_del(args); return lval_err(err); }
 
-/* Add SYM and SEXPR as possible lval types */
-enum { LVAL_ERR, LVAL_NUM, LVAL_SYM, LVAL_SEXPR, LVAL_QEXPR };
+/* Forward Declarations */
 
-typedef struct lval {
-    int type;
-    long num;
-    /* Error and Symbol types have some string data */
-    char* err;
-    char* sym;
-    /* Count and Pointer to a list of "lval*"; */
-    int count;
-    struct lval** cell;
-} lval;
+struct lval;
+struct lenv;
+typedef struct lval lval;
+typedef struct lenv lenv;
+
+/* Lisp Value */
+
+enum { LVAL_ERR, LVAL_NUM,   LVAL_SYM,
+    LVAL_FUN, LVAL_SEXPR, LVAL_QEXPR };
 
 typedef lval*(*lbuiltin)(lenv*, lval*);
+
+struct lval {
+    int type;
+
+    long num;
+    char* err;
+    char* sym;
+    lbuiltin fun;
+
+    int count;
+    lval** cell;
+};
 
 /* Construct a pointer to a new Number lval */
 lval* lval_num(long x) {
