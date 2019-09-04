@@ -358,33 +358,28 @@ lval* builtin_list(lval* a) {
 lval* lval_eval(lval* v);
 lval* builtin(lval* a, char* func);
 
-lval* lval_eval_sexpr(lval* v) {
+lval* lval_eval_sexpr(lenv* e, lval* v) {
 
-    /* Evaluate Children */
     for (int i = 0; i < v->count; i++) {
-        v->cell[i] = lval_eval(v->cell[i]);
+        v->cell[i] = lval_eval(e, v->cell[i]);
     }
 
-    /* Error Checking */
     for (int i = 0; i < v->count; i++) {
         if (v->cell[i]->type == LVAL_ERR) { return lval_take(v, i); }
     }
 
-    /* Empty Expression */
     if (v->count == 0) { return v; }
-
-    /* Single Expression */
     if (v->count == 1) { return lval_take(v, 0); }
 
-    /* Ensure First Element is Symbol */
+    /* Ensure first element is a function after evaluation */
     lval* f = lval_pop(v, 0);
-    if (f->type != LVAL_SYM) {
-        lval_del(f); lval_del(v);
-        return lval_err("S-expression Does not start with symbol.");
+    if (f->type != LVAL_FUN) {
+        lval_del(v); lval_del(f);
+        return lval_err("first element is not a function");
     }
 
-    /* Call builtin with operator */
-    lval* result = builtin(v, f->sym);
+    /* If so call function to get result */
+    lval* result = f->fun(e, v);
     lval_del(f);
     return result;
 }
