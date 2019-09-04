@@ -19,6 +19,9 @@ void add_history(char* unused) {}
 #include <editline/readline.h>
 #endif
 
+#define LASSERT(args, cond, err) \
+  if (!(cond)) { lval_del(args); return lval_err(err); }
+
 /* Add SYM and SEXPR as possible lval types */
 enum { LVAL_ERR, LVAL_NUM, LVAL_SYM, LVAL_SEXPR, LVAL_QEXPR };
 
