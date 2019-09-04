@@ -219,26 +219,14 @@ lval* builtin_head(lval* a) {
 }
 
 lval* builtin_tail(lval* a) {
-    /* Check Error Conditions */
-    if (a->count != 1) {
-        lval_del(a);
-        return lval_err("Function 'tail' passed too many arguments!");
-    }
+    LASSERT(a, a->count == 1,
+            "Function 'tail' passed too many arguments!");
+    LASSERT(a, a->cell[0]->type == LVAL_QEXPR,
+            "Function 'tail' passed incorrect type!");
+    LASSERT(a, a->cell[0]->count != 0,
+            "Function 'tail' passed {}!");
 
-    if (a->cell[0]->type != LVAL_QEXPR) {
-        lval_del(a);
-        return lval_err("Function 'tail' passed incorrect types!");
-    }
-
-    if (a->cell[0]->count == 0) {
-        lval_del(a);
-        return lval_err("Function 'tail' passed {}!");
-    }
-
-    /* Take first argument */
     lval* v = lval_take(a, 0);
-
-    /* Delete first element and return */
     lval_del(lval_pop(v, 0));
     return v;
 }
@@ -334,7 +322,7 @@ int main(int argc, char** argv) {
     expr   : <number> | <symbol> | <sexpr> | <qexpr> ;     \
     lispy  : /^/ <expr>* /$/ ;                             \
   ",
-              Number, Symbol, Sexpr, Qexpr, Expr, Lispy)
+              Number, Symbol, Sexpr, Qexpr, Expr, Lispy);
 
     puts("Lispy Version 0.0.0.0.5");
     puts("Press Ctrl+c to Exit\n");
