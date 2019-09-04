@@ -80,14 +80,11 @@ lval* lval_qexpr(void) {
 void lval_del(lval* v) {
 
     switch (v->type) {
-        /* Do nothing special for number type */
         case LVAL_NUM: break;
-
-            /* For Err or Sym free the string data */
         case LVAL_ERR: free(v->err); break;
         case LVAL_SYM: free(v->sym); break;
 
-            /* If Sexpr or QExp then delete all elements inside */
+            /* If Qexpr or Sexpr then delete all elements inside */
         case LVAL_QEXPR:
         case LVAL_SEXPR:
             for (int i = 0; i < v->count; i++) {
@@ -98,7 +95,6 @@ void lval_del(lval* v) {
             break;
     }
 
-    /* Free the memory allocated for the "lval" struct itself */
     free(v);
 }
 
@@ -293,7 +289,7 @@ int main(int argc, char** argv) {
       symbol : '+' | '-' | '*' | '/' ;         \
       sexpr  : '(' <expr>* ')' ;               \
       qexpr  : '{' <expr>* '}' ;               \
-      expr   : <number> | <symbol> | <sexpr> ; \
+      expr   : <number> | <symbol> | <sexpr> | <qexpr> ; \
       lispy  : /^/ <expr>* /$/ ;               \
     ",
               Number, Symbol, Sexpr, Qexpr, Expr, Lispy);
@@ -321,7 +317,7 @@ int main(int argc, char** argv) {
 
     }
 
-    mpc_cleanup(5, Number, Symbol, Sexpr, Qexpr, Expr, Lispy);
+    mpc_cleanup(6, Number, Symbol, Sexpr, Qexpr, Expr, Lispy);
 
     return 0;
 }
