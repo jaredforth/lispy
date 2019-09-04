@@ -208,6 +208,21 @@ lval* lval_add(lval* v, lval* x) {
     return v;
 }
 
+void lval_expr_print(lval* v, char open, char close) {
+    putchar(open);
+    for (int i = 0; i < v->count; i++) {
+
+        /* Print Value contained within */
+        lval_print(v->cell[i]);
+
+        /* Don't print trailing space if last element */
+        if (i != (v->count-1)) {
+            putchar(' ');
+        }
+    }
+    putchar(close);
+}
+
 int main(int argc, char** argv) {
 
     mpc_parser_t* Number = mpc_new("number");
