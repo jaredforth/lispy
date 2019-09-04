@@ -36,6 +36,8 @@ typedef struct lval {
     struct lval** cell;
 } lval;
 
+typedef lval*(*lbuiltin)(lenv*, lval*);
+
 /* Construct a pointer to a new Number lval */
 lval* lval_num(long x) {
     lval* v = malloc(sizeof(lval));
