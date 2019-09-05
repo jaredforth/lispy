@@ -664,18 +664,6 @@ void lenv_add_builtins(lenv* e) {
 
 lval* lval_eval_sexpr(lenv* e, lval* v) {
 
-    for (int i = 0; i < v->count; i++) {
-        v->cell[i] = lval_eval(e, v->cell[i]);
-    }
-
-    for (int i = 0; i < v->count; i++) {
-        if (v->cell[i]->type == LVAL_ERR) { return lval_take(v, i); }
-    }
-
-    if (v->count == 0) { return v; }
-    if (v->count == 1) { return lval_take(v, 0); }
-
-    /* Ensure first element is a function after evaluation */
     lval* f = lval_pop(v, 0);
     if (f->type != LVAL_FUN) {
         lval* err = lval_err(
@@ -686,10 +674,7 @@ lval* lval_eval_sexpr(lenv* e, lval* v) {
         return err;
     }
 
-    /* If so call function to get result */
-    lval* result = f->builtin(e, v);
-    lval_del(f);
-    return result;
+    lval* result = lval_call(e, f, v);
 }
 
 lval* lval_eval(lenv* e, lval* v) {
