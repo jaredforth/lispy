@@ -116,6 +116,14 @@ lval* lval_qexpr(void) {
     return v;
 }
 
+lval* lval_str(char* s) {
+    lval* v = malloc(sizeof(lval));
+    v->type = LVAL_STR;
+    v->str = malloc(strlen(s) + 1);
+    strcpy(v->str, s);
+    return v;
+}
+
 void lenv_del(lenv* e);
 
 void lval_del(lval* v) {
