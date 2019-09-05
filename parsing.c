@@ -17,7 +17,6 @@ void add_history(char* unused) {}
 
 #else
 #include <editline/readline.h>
-#include <editline/history.h>
 #endif
 
 /* Forward Declarations */
@@ -36,10 +35,19 @@ typedef lval*(*lbuiltin)(lenv*, lval*);
 
 struct lval {
     int type;
+
+    /* Basic */
     long num;
     char* err;
     char* sym;
-    lbuiltin fun;
+
+    /* Function */
+    lbuiltin builtin;
+    lenv* env;
+    lval* formals;
+    lval* body;
+
+    /* Expression */
     int count;
     lval** cell;
 };
