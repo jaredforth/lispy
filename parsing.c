@@ -139,6 +139,7 @@ void lval_del(lval* v) {
             break;
         case LVAL_ERR: free(v->err); break;
         case LVAL_SYM: free(v->sym); break;
+        case LVAL_STR: free(v->str); break;
         case LVAL_QEXPR:
         case LVAL_SEXPR:
             for (int i = 0; i < v->count; i++) {
@@ -174,6 +175,8 @@ lval* lval_copy(lval* v) {
         case LVAL_SYM: x->sym = malloc(strlen(v->sym) + 1);
             strcpy(x->sym, v->sym);
             break;
+        case LVAL_STR: x->str = malloc(strlen(v->str) + 1);
+            strcpy(x->str, v->str); break;
         case LVAL_SEXPR:
         case LVAL_QEXPR:
             x->count = v->count;
@@ -230,6 +233,18 @@ void lval_print_expr(lval* v, char open, char close) {
     putchar(close);
 }
 
+void lval_print_str(lval* v) {
+    /* Make a Copy of the string */
+    char* escaped = malloc(strlen(v->str)+1);
+    strcpy(escaped, v->str);
+    /* Pass it through the escape function */
+    escaped = mpcf_escape(escaped);
+    /* Print it between " characters */
+    printf("\"%s\"", escaped);
+    /* free the copied string */
+    free(escaped);
+}
+
 void lval_print(lval* v) {
     switch (v->type) {
         case LVAL_FUN:
@@ -247,6 +262,7 @@ void lval_print(lval* v) {
         case LVAL_ERR:   printf("Error: %s", v->err); break;
         case LVAL_SYM:   printf("%s", v->sym); break;
         case LVAL_SEXPR: lval_print_expr(v, '(', ')'); break;
+        case LVAL_STR:   lval_print_str(v); break;
         case LVAL_QEXPR: lval_print_expr(v, '{', '}'); break;
     }
 }
@@ -275,6 +291,8 @@ int lval_eq(lval* x, lval* y) {
                 return lval_eq(x->formals, y->formals) && lval_eq(x->body, y->body);
             }
 
+        case LVAL_STR: return (strcmp(x->str, y->str) == 0);
+
             /* If list compare every individual element */
         case LVAL_QEXPR:
         case LVAL_SEXPR:
@@ -296,6 +314,7 @@ char* ltype_name(int t) {
         case LVAL_NUM: return "Number";
         case LVAL_ERR: return "Error";
         case LVAL_SYM: return "Symbol";
+        case LVAL_STR: return "String";
         case LVAL_SEXPR: return "S-Expression";
         case LVAL_QEXPR: return "Q-Expression";
         default: return "Unknown";
