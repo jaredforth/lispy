@@ -381,6 +381,22 @@ lval* builtin_join(lenv* e, lval* a) {
     return x;
 }
 
+lval* lval_lambda(lval* formals, lval* body) {
+    lval* v = malloc(sizeof(lval));
+    v->type = LVAL_FUN;
+
+    /* Set Builtin to Null */
+    v->builtin = NULL;
+
+    /* Build new environment */
+    v->env = lenv_new();
+
+    /* Set Formals and Body */
+    v->formals = formals;
+    v->body = body;
+    return v;
+}
+
 lval* builtin_op(lenv* e, lval* a, char* op) {
 
     for (int i = 0; i < a->count; i++) {
