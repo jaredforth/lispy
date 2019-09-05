@@ -826,6 +826,7 @@ int main(int argc, char** argv) {
     mpc_parser_t* Sexpr  = mpc_new("sexpr");
     mpc_parser_t* Qexpr  = mpc_new("qexpr");
     mpc_parser_t* Expr   = mpc_new("expr");
+    mpc_parser_t* String   = mpc_new("string");
     mpc_parser_t* Lispy  = mpc_new("lispy");
 
     mpca_lang(MPCA_LANG_DEFAULT,
@@ -838,7 +839,7 @@ int main(int argc, char** argv) {
       string  : /\\\"(\\\\\\\\.|[^\\\"])*\\\"/ ;          \
       lispy  : /^/ <expr>* /$/ ;                          \
     ",
-              Number, Symbol, Sexpr, Qexpr, Expr, Lispy);
+              Number, Symbol, Sexpr, Qexpr, Expr, String, Lispy);
 
     puts("Lispy Version 0.0.0.0.9");
     puts("Press Ctrl+c to Exit\n");
