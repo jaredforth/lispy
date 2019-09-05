@@ -468,6 +468,44 @@ lval* builtin_op(lenv* e, lval* a, char* op) {
     return x;
 }
 
+int lval_eq(lval* x, lval* y) {
+
+    /* Different Types are always unequal */
+    if (x->type != y->type) { return 0; }
+
+    /* Compare Based upon type */
+    switch (x->type) {
+        /* Compare Number Value */
+        case LVAL_NUM: return (x->num == y->num);
+
+            /* Compare String Values */
+        case LVAL_ERR: return (strcmp(x->err, y->err) == 0);
+        case LVAL_SYM: return (strcmp(x->sym, y->sym) == 0);
+
+            /* If builtin compare, otherwise compare formals and body */
+        case LVAL_FUN:
+            if (x->builtin || y->builtin) {
+                return x->builtin == y->builtin;
+            } else {
+                return lval_eq(x->formals, y->formals)
+                       && lval_eq(x->body, y->body);
+            }
+
+            /* If list compare every individual element */
+        case LVAL_QEXPR:
+        case LVAL_SEXPR:
+            if (x->count != y->count) { return 0; }
+            for (int i = 0; i < x->count; i++) {
+                /* If any element not equal then whole list not equal */
+                if (!lval_eq(x->cell[i], y->cell[i])) { return 0; }
+            }
+            /* Otherwise lists must be equal */
+            return 1;
+            break;
+    }
+    return 0;
+}
+
 lval* builtin_add(lenv* e, lval* a) { return builtin_op(e, a, "+"); }
 lval* builtin_sub(lenv* e, lval* a) { return builtin_op(e, a, "-"); }
 lval* builtin_mul(lenv* e, lval* a) { return builtin_op(e, a, "*"); }
