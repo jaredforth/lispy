@@ -549,6 +549,14 @@ void lenv_add_builtin(lenv* e, char* name, lbuiltin func) {
     lval_del(k); lval_del(v);
 }
 
+lval* builtin_def(lenv* e, lval* a) {
+    return builtin_var(e, a, "def");
+}
+
+lval* builtin_put(lenv* e, lval* a) {
+    return builtin_var(e, a, "=");
+}
+
 void lenv_add_builtins(lenv* e) {
     /* Variable Functions */
     lenv_add_builtin(e, "def", builtin_def);
@@ -560,6 +568,8 @@ void lenv_add_builtins(lenv* e) {
     lenv_add_builtin(e, "eval", builtin_eval);
     lenv_add_builtin(e, "join", builtin_join);
     lenv_add_builtin(e, "\\", builtin_lambda);
+    lenv_add_builtin(e, "def", builtin_def);
+    lenv_add_builtin(e, "=",   builtin_put);
 
     /* Mathematical Functions */
     lenv_add_builtin(e, "+", builtin_add);
