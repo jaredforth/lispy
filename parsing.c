@@ -138,6 +138,13 @@ void lval_del(lval* v) {
     free(v);
 }
 
+void lenv_def(lenv* e, lval* k, lval* v) {
+    /* Iterate till e has no parent */
+    while (e->par) { e = e->par; }
+    /* Put value in e */
+    lenv_put(e, k, v);
+}
+
 lenv* lenv_copy(lenv* e) {
     lenv* n = malloc(sizeof(lenv));
     n->par = e->par;
