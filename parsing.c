@@ -212,6 +212,27 @@ lval* lval_take(lval* v, int i) {
     return x;
 }
 
+lval* builtin_lambda(lenv* e, lval* a) {
+    /* Check Two arguments, each of which are Q-Expressions */
+    LASSERT_NUM("\\", a, 2);
+    LASSERT_TYPE("\\", a, 0, LVAL_QEXPR);
+    LASSERT_TYPE("\\", a, 1, LVAL_QEXPR);
+
+    /* Check first Q-Expression contains only Symbols */
+    for (int i = 0; i < a->cell[0]->count; i++) {
+        LASSERT(a, (a->cell[0]->cell[i]->type == LVAL_SYM),
+                "Cannot define non-symbol. Got %s, Expected %s.",
+                ltype_name(a->cell[0]->cell[i]->type),ltype_name(LVAL_SYM));
+    }
+
+    /* Pop first two arguments and pass them to lval_lambda */
+    lval* formals = lval_pop(a, 0);
+    lval* body = lval_pop(a, 0);
+    lval_del(a);
+
+    return lval_lambda(formals, body);
+}
+
 void lval_print(lval* v);
 
 void lval_print_expr(lval* v, char open, char close) {
