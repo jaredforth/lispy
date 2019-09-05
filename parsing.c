@@ -819,6 +819,7 @@ int main(int argc, char** argv) {
       sexpr  : '(' <expr>* ')' ;                          \
       qexpr  : '{' <expr>* '}' ;                          \
       expr   : <number> | <symbol> | <sexpr> | <qexpr> ;  \
+      string  : /\\\"(\\\\\\\\.|[^\\\"])*\\\"/ ;          \
       lispy  : /^/ <expr>* /$/ ;                          \
     ",
               Number, Symbol, Sexpr, Qexpr, Expr, Lispy);
