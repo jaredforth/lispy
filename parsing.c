@@ -610,6 +610,23 @@ lval* lval_call(lenv* e, lval* f, lval* a) {
         /* Pop the first symbol from the formals */
         lval* sym = lval_pop(f->formals, 0);
 
+        /* Special Case to deal with '&' */
+        if (strcmp(sym->sym, "&") == 0) {
+
+            /* Ensure '&' is followed by another symbol */
+            if (f->formals->count != 1) {
+                lval_del(a);
+                return lval_err("Function format invalid. "
+                                "Symbol '&' not followed by single symbol.");
+            }
+
+            /* Next formal should be bound to remaining arguments */
+            lval* nsym = lval_pop(f->formals, 0);
+            lenv_put(f->env, nsym, builtin_list(e, a));
+            lval_del(sym); lval_del(nsym);
+            break;
+        }
+
         /* Pop the next argument from the list */
         lval* val = lval_pop(a, 0);
 
