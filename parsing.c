@@ -117,7 +117,13 @@ void lval_del(lval* v) {
 
     switch (v->type) {
         case LVAL_NUM: break;
-        case LVAL_FUN: break;
+        case LVAL_FUN:
+            if (!v->builtin) {
+                lenv_del(v->env);
+                lval_del(v->formals);
+                lval_del(v->body);
+            }
+            break;
         case LVAL_ERR: free(v->err); break;
         case LVAL_SYM: free(v->sym); break;
         case LVAL_QEXPR:
@@ -140,7 +146,16 @@ lval* lval_copy(lval* v) {
     switch (v->type) {
 
         /* Copy Functions and Numbers Directly */
-        case LVAL_FUN: x->builtin = v->builtin; break;
+        case LVAL_FUN:
+            if (v->builtin) {
+                x->builtin = v->builtin;
+            } else {
+                x->builtin = NULL;
+                x->env = lenv_copy(v->env);
+                x->formals = lval_copy(v->formals);
+                x->body = lval_copy(v->body);
+            }
+            break;
         case LVAL_NUM: x->num = v->num; break;
 
             /* Copy Strings using malloc and strcpy */
@@ -212,7 +227,14 @@ void lval_print_expr(lval* v, char open, char close) {
 
 void lval_print(lval* v) {
     switch (v->type) {
-        case LVAL_FUN:   printf("<function>"); break;
+        case LVAL_FUN:
+            if (v->builtin) {
+                printf("<builtin>");
+            } else {
+                printf("(\\ "); lval_print(v->formals);
+                putchar(' '); lval_print(v->body); putchar(')');
+            }
+            break;
         case LVAL_NUM:   printf("%li", v->num); break;
         case LVAL_ERR:   printf("Error: %s", v->err); break;
         case LVAL_SYM:   printf("%s", v->sym); break;
