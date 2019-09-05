@@ -288,14 +288,12 @@ struct lenv {
 };
 
 lenv* lenv_new(void) {
-
-    /* Initialize struct */
     lenv* e = malloc(sizeof(lenv));
+    e->par = NULL;
     e->count = 0;
     e->syms = NULL;
     e->vals = NULL;
     return e;
-
 }
 
 void lenv_del(lenv* e) {
