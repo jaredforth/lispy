@@ -281,6 +281,7 @@ char* ltype_name(int t) {
 /* Lisp Environment */
 
 struct lenv {
+    lenv* par;
     int count;
     char** syms;
     lval** vals;
