@@ -312,16 +312,18 @@ void lenv_del(lenv* e) {
 
 lval* lenv_get(lenv* e, lval* k) {
 
-    /* Iterate over all items in environment */
     for (int i = 0; i < e->count; i++) {
-        /* Check if the stored string matches the symbol string */
-        /* If it does, return a copy of the value */
         if (strcmp(e->syms[i], k->sym) == 0) {
             return lval_copy(e->vals[i]);
         }
     }
-    /* If no symbol found return error */
-    return lval_err("Unbound Symbol '%s'", k->sym);
+
+    /* If no symbol check in parent otherwise error */
+    if (e->par) {
+        return lenv_get(e->par, k);
+    } else {
+        return lval_err("Unbound Symbol '%s'", k->sym);
+    }
 }
 
 void lenv_put(lenv* e, lval* k, lval* v) {
