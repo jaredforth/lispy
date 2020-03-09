@@ -14,4 +14,4 @@ If the following error is encountered:
 
 > source/parsing.c:19:10: fatal error: editline/readline.h: No such file or directory #include <editline/readline.h>
 
-The [readline]() library needs to be installed. 
+The [readline](https://tiswww.case.edu/php/chet/readline/rltop.html) library needs to be installed. 
