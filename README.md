@@ -1,8 +1,8 @@
 [![Build Status](https://travis-ci.com/jaredforth/buildyourownlisp.svg?token=mH2pScYxqRkBEzpBQAu6&branch=master)](https://travis-ci.com/jaredforth/buildyourownlisp)
 
-# Build Your Own Lisp
+# Lispy
 
-Learn C and language design
+An interpreted, Lisp-like language built in C.
 
 ## Compiling
 
