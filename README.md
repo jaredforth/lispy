@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/jaredforth/buildyourownlisp.svg?token=mH2pScYxqRkBEzpBQAu6&branch=master)](https://travis-ci.com/jaredforth/buildyourownlisp)
+[![Build Status](https://travis-ci.com/jaredforth/lispy.svg?token=mH2pScYxqRkBEzpBQAu6&branch=master)](https://travis-ci.com/jaredforth/lispy)
 ![GitHub](https://img.shields.io/github/license/jaredforth/lispy)
 
 # Lispy
